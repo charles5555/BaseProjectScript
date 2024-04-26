@@ -7,29 +7,77 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.function.Function;
 
+
 public class Functions {
-    private WebDriver driver;
+    protected PropertyReader propertyReader = PropertyReader.getPropertyReader();
+    private final PropertyReader reader = PropertyReader.getPropertyReader();
+
+    @FindBy(xpath = "//*[@id=\"registered-customer\"]")
+    private  WebElement loginContainer;
+
+    @FindBy (id = "username")
+    private  WebElement email;
+
+    @FindBy (id = "password")
+    private  WebElement password;
+
+    @FindBy (xpath = "//*[@id=\"Login\"]")
+    private  WebElement button;
+
+
+    String customerEmail = propertyReader.getProperty("user.email");
+    String customerPassword = propertyReader.getProperty("user.password");
+
+    private static WebDriver driver;
     public Functions() {
 
         ChromeOptions chromeOptions = new ChromeOptions();
         WebDriverManager.chromedriver().setup();
         chromeOptions.addArguments("--disable-notifications");
         driver = new ChromeDriver(chromeOptions);
+    }
+    //Ir a una página web
+    public void GoWebPage(){
+        driver.get(reader.getProperty("url"));
+    }
 
+    //Métodos para agregar texto a los campos (varía dependiendo de localizador que se ocupe), los parámetros
+    //quee usa son los siguientes: duration, cycleTime, id, text.
+    //duration es el tiempo de duración total de la espera
+    //cycleTime es el tiempo del ciclo que va a ir corrobarando que el objeto sea interactuable o visible
+    //id es el id del elemento
+    //text es el texto que se va a mandar al campo de texto
 
+    public void sendTextToField(By email, By password) {
+        System.out.println("aqui");
+
+        WebElement correo = fluentWait(60,5, email); // Llamada al método fluentWait
+        WebElement contrasena = fluentWait(60,5, password); // Llamada al método fluentWait
+
+        if (correo != null) {
+            System.out.println("entro if 1");
+            correo.sendKeys(customerEmail);
+            contrasena.sendKeys(customerPassword);
+            System.out.println("entro1");
+        } else {
+            System.out.println("No se encontró el botón con el localizador proporcionado.");
+        }
 
     }
 
-
-    //Ir a una página web
-    public void GoWebPage(String url){
-        driver.get(url);
+    public void ClickButtom(By boton){
+        WebElement button = fluentWait(60,5, boton); // Llamada al método fluentWait
+        if (button != null) {
+            button.click();
+        } else {
+            System.out.println("No se encontró el botón con el localizador proporcionado.");
+        }
     }
 
     private WebElement fluentWait(int duration, int cycleTime, By locator) {
@@ -44,29 +92,4 @@ public class Functions {
             }
         });
     }
-
-    //Métodos para agregar texto a los campos (varía dependiendo de localizador que se ocupe), los parámetros
-    //quee usa son los siguientes: duration, cycleTime, id, text.
-    //duration es el tiempo de duración total de la espera
-    //cycleTime es el tiempo del ciclo que va a ir corrobarando que el objeto sea interactuable o visible
-    //id es el id del elemento
-    //text es el texto que se va a mandar al campo de texto
-    public void sendTextToField(int duration, int cycleTime, By locator, String text) {
-        WebElement element = fluentWait(duration,cycleTime,locator); // Llamada al método fluentWait
-        if (element != null) {
-            element.sendKeys(text);
-        } else {
-            System.out.println("No se encontró el campo de texto con el localizador proporcionado.");
-        }
-    }
-
-    public void ClickButtom(int duration, int cycleTime, By locator){
-        WebElement element = fluentWait(duration,cycleTime,locator); // Llamada al método fluentWait
-        if (element != null) {
-            element.click();
-        } else {
-            System.out.println("No se encontró el botón con el localizador proporcionado.");
-        }
-    }
-
 }
