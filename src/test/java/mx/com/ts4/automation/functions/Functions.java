@@ -29,7 +29,7 @@ public class Functions {
     String customerPassword = propertyReader.getProperty("user.password");
 
     private static WebDriver driver;
-    JavascriptExecutor js = (JavascriptExecutor) driver;
+
     public Functions() {
 
         ChromeOptions chromeOptions = new ChromeOptions();
@@ -43,39 +43,10 @@ public class Functions {
         driver.get(reader.getProperty("url"));
     }
 
-    //Métodos para agregar texto a los campos (varía dependiendo de localizador que se ocupe), los parámetros
-    //quee usa son los siguientes: duration, cycleTime, id, text.
-    //duration es el tiempo de duración total de la espera
-    //cycleTime es el tiempo del ciclo que va a ir corrobarando que el objeto sea interactuable o visible
-    //id es el id del elemento
-    //text es el texto que se va a mandar al campo de texto
-
-    public void sendTextToField(By email, By password) {
-        System.out.println("aqui");
-
-        WebElement correo = fluentWaitElement(60,5, email); // Llamada al método fluentWait
-        WebElement contrasena = fluentWaitElement(60,5, password); // Llamada al método fluentWait
-
-        if (correo != null) {
-            System.out.println("entro if 1");
-            correo.sendKeys(customerEmail);
-            contrasena.sendKeys(customerPassword);
-            System.out.println("entro1");
-        } else {
-            System.out.println("No se encontró el botón con el localizador proporcionado.");
-        }
-
-    }
-
-    public void ClickElement(By boton){
-        WebElement button = fluentWaitElement(60,1, boton); // Llamada al método fluentWait
-        if (button != null) {
-            button.click();
-        } else {
-            System.out.println("No se encontró el botón con el localizador proporcionado.");
-        }
-    }
-
+    //Método para las esperas fluidas, requiere 3 parámetros
+    //duration ----- duración del ciclo
+    //cycleTime ---  duración del ciclo para probar
+    //locator -----  es el localizador del elemento web
     private WebElement fluentWaitElement(int duration, int cycleTime, By locator) {
         System.out.println("Iniciando FluentWait para el elemento: " + locator);
         Wait<WebDriver> wait = new FluentWait<>(driver)
@@ -87,29 +58,97 @@ public class Functions {
         return driver.findElement(locator);
     }
 
+    //Métodos para agregar texto a los campos (varía dependiendo de localizador que se ocupe), los parámetros
+    //quee usa son los siguientes: duration, cycleTime, id, text.
+    //duration es el tiempo de duración total de la espera
+    //cycleTime es el tiempo del ciclo que va a ir corrobarando que el objeto sea interactuable o visible
+    //id es el id del elemento
+    //text es el texto que se va a mandar al campo de texto
 
+    public void sendTextToField(By email, By password) {
+        //System.out.println("aqui");
+
+        WebElement correo = fluentWaitElement(60,5, email); // Llamada al método fluentWait
+        WebElement contrasena = fluentWaitElement(60,5, password); // Llamada al método fluentWait
+
+        if (correo != null) {
+            //System.out.println("entro if 1");
+            correo.sendKeys(customerEmail);
+            contrasena.sendKeys(customerPassword);
+            //System.out.println("entro1");
+        } else {
+            System.out.println("No se encontró el botón con el localizador proporcionado.");
+        }
+
+
+
+    }
+    //Hace un clic a un elemento web. Este método requiere solo un parámetro
+    //locator ---- es el localizador del elemento web
+    //
+    public void ClickElement(By locator){
+        WebElement button = fluentWaitElement(10,1, locator); // Llamada al método fluentWait
+        if (button != null) {
+            button.click();
+        } else {
+            System.out.println("No se encontró el botón con el localizador proporcionado.");
+        }
+    }
+
+    //Método para dar clic a un elemento web que comparte el mismo localizador con varios elementos web
+    //Este método requiere un parámetro
+    //locator ----- es el localizador de los elementos web a localizar
+    //Nota: requiere arreglar el .get() porque no es muy general
+    public void ClickElementFromList(By locator, int elementNumber){
+        WebElement button = fluentWaitElement(10,1, locator); // Llamada al método fluentWait
+        List<WebElement> dropDownList = driver.findElements(locator);
+        dropDownList.get(elementNumber).click();
+    }
+
+
+
+    //Método para seleccionar una opción de un desplegable
+    //Requiere 2 parámetros
+    //locator1 ---- localizador del desplegable
+    //locator2 ---- localizador de la opción a escoger del desplegable
     public void DropDown(By locator1, By locator2){
-        WebElement dropDownElement = fluentWaitElement(60,5, locator1); // Llamada al método fluentWait
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebElement dropDownElement = fluentWaitElement(10,1, locator1); // Llamada al método fluentWait
+        String argument = "arguments[0].scrollIntoView()";
         js.executeScript(argument,dropDownElement);
         dropDownElement.click();
-        WebElement dropDownListOption = fluentWaitElement(60,5,locator2);
+        WebElement dropDownListOption = fluentWaitElement(10,1,locator2);
         js.executeScript(argument,dropDownListOption);
         dropDownListOption.click();
     }
-
+    //Método para seleccionar una opción de un desplegable. Este método se diferencía del anterior porque
+    //aquí todas las opciones del desplegable comparten el mismo localizador
+    //Requiere 3 parámetros
+    //locator1 -------- localizador del desplegable
+    //locator2 -------- localizador de las opciones del desplegable
+    //elementNumber --- elemento de la lista que corresponde a la opción a seleccionar del desplegable
     public void DropDownList(By locator1, By locator2, int elementNumber){
-        WebElement dropDownListElement = fluentWaitElement(60,5, locator1); // Llamada al método fluentWait
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebElement dropDownListElement = fluentWaitElement(10,1, locator1); // Llamada al método fluentWait
         js.executeScript(argument,dropDownListElement);
         dropDownListElement.click();
         List<WebElement> dropDownList = driver.findElements(locator2);
         dropDownList.get(elementNumber).click();
     }
-
+    //Método para extraer el texto que contiene un elemento web
+    //requiere un parámetro
+    //locator --- localizador del elemento web
     public String ObtainTextFromElement(By locator){
         WebElement dropDownListElement = fluentWaitElement(60,5, locator);
         return dropDownListElement.getText();
     }
 
+    ////////////////////////////
+
+    public void SendTextToField(By locator,String value) {
+        WebElement element = fluentWaitElement(10,1, locator); // Llamada al método fluentWait
+        element.sendKeys(value);
+    }
 
 
 }
