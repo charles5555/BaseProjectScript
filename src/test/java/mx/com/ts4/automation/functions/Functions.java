@@ -2,15 +2,18 @@ package mx.com.ts4.automation.functions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 
@@ -18,29 +21,22 @@ public class Functions {
     protected PropertyReader propertyReader = PropertyReader.getPropertyReader();
     private final PropertyReader reader = PropertyReader.getPropertyReader();
 
-    @FindBy(xpath = "//*[@id=\"registered-customer\"]")
-    private  WebElement loginContainer;
 
-    @FindBy (id = "username")
-    private  WebElement email;
-
-    @FindBy (id = "password")
-    private  WebElement password;
-
-    @FindBy (xpath = "//*[@id=\"Login\"]")
-    private  WebElement button;
+    private String argument = "arguments[0].scrollIntoView()";
 
 
     String customerEmail = propertyReader.getProperty("user.email");
     String customerPassword = propertyReader.getProperty("user.password");
 
     private static WebDriver driver;
+    JavascriptExecutor js = (JavascriptExecutor) driver;
     public Functions() {
 
         ChromeOptions chromeOptions = new ChromeOptions();
         WebDriverManager.chromedriver().setup();
         chromeOptions.addArguments("--disable-notifications");
         driver = new ChromeDriver(chromeOptions);
+
     }
     //Ir a una página web
     public void GoWebPage(){
@@ -57,8 +53,8 @@ public class Functions {
     public void sendTextToField(By email, By password) {
         System.out.println("aqui");
 
-        WebElement correo = fluentWait(60,5, email); // Llamada al método fluentWait
-        WebElement contrasena = fluentWait(60,5, password); // Llamada al método fluentWait
+        WebElement correo = fluentWaitElement(60,5, email); // Llamada al método fluentWait
+        WebElement contrasena = fluentWaitElement(60,5, password); // Llamada al método fluentWait
 
         if (correo != null) {
             System.out.println("entro if 1");
@@ -71,8 +67,8 @@ public class Functions {
 
     }
 
-    public void ClickButtom(By boton){
-        WebElement button = fluentWait(60,5, boton); // Llamada al método fluentWait
+    public void ClickElement(By boton){
+        WebElement button = fluentWaitElement(60,1, boton); // Llamada al método fluentWait
         if (button != null) {
             button.click();
         } else {
@@ -80,16 +76,40 @@ public class Functions {
         }
     }
 
-    private WebElement fluentWait(int duration, int cycleTime, By locator) {
-        FluentWait<WebDriver> wait = new FluentWait<>(driver)
+    private WebElement fluentWaitElement(int duration, int cycleTime, By locator) {
+        System.out.println("Iniciando FluentWait para el elemento: " + locator);
+        Wait<WebDriver> wait = new FluentWait<>(driver)
                 .withTimeout(Duration.ofSeconds(duration))
                 .pollingEvery(Duration.ofSeconds(cycleTime))
                 .ignoring(NoSuchElementException.class);
 
-        return wait.until(new Function<WebDriver, WebElement>() {
-            public WebElement apply(WebDriver driver) {
-                return driver.findElement(locator);
-            }
-        });
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return driver.findElement(locator);
     }
+
+
+    public void DropDown(By locator1, By locator2){
+        WebElement dropDownElement = fluentWaitElement(60,5, locator1); // Llamada al método fluentWait
+        js.executeScript(argument,dropDownElement);
+        dropDownElement.click();
+        WebElement dropDownListOption = fluentWaitElement(60,5,locator2);
+        js.executeScript(argument,dropDownListOption);
+        dropDownListOption.click();
+    }
+
+    public void DropDownList(By locator1, By locator2, int elementNumber){
+        WebElement dropDownListElement = fluentWaitElement(60,5, locator1); // Llamada al método fluentWait
+        js.executeScript(argument,dropDownListElement);
+        dropDownListElement.click();
+        List<WebElement> dropDownList = driver.findElements(locator2);
+        dropDownList.get(elementNumber).click();
+    }
+
+    public String ObtainTextFromElement(By locator){
+        WebElement dropDownListElement = fluentWaitElement(60,5, locator);
+        return dropDownListElement.getText();
+    }
+
+
+
 }
