@@ -1,5 +1,7 @@
 package mx.com.ts4.automation.functions;
 
+import mx.com.ts4.automation.functions.Util;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
