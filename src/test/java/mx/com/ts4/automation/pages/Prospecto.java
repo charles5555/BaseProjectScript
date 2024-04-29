@@ -40,7 +40,7 @@ public class Prospecto extends Login {
         DropDown(By.xpath("//button[contains(@aria-label,'Sector -')]"),By.xpath("//span[@title='Gobierno Federal']"));
         DropDownList(By.xpath("//button[contains(@aria-label,'Vertical -')]"),By.xpath("//span[@title='Financiero']"),1);
 
-        clic(By.name("SaveEdit"));
+        clic(By.xpath("//button[text()='Guardar']"));
     }
 
 }
