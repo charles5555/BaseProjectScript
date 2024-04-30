@@ -4,6 +4,9 @@ import mx.com.ts4.automation.functions.PageObject;
 import mx.com.ts4.automation.functions.PropertyReader;
 import org.openqa.selenium.By;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class Login extends PageObject {
 
@@ -20,6 +23,7 @@ public class Login extends PageObject {
     //text es el texto que se va a mandar al campo de texto
 
     public void CompletarLogin() {
+
         IngresoDatos(By.id("username"),customerEmail);
         IngresoDatos(By.id("password"),customerPassword);
         clic(By.id("Login"));

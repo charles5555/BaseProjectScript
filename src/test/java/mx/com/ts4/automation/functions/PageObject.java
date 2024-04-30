@@ -109,7 +109,7 @@ public class PageObject {
     //locator ---- es el localizador del elemento web
     //
     public void clic(By locator){
-        WebElement button = fluentWaitElement(13,1, locator); // Llamada al método fluentWait
+        WebElement button = fluentWaitElement(20,1, locator); // Llamada al método fluentWait
         if (button != null) {
             button.click();
         } else {

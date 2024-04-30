@@ -1,6 +1,7 @@
 package mx.com.ts4.automation.pages;
 
 import org.openqa.selenium.By;
+import java.util.Random;
 
 public class Prospecto extends Login {
 
@@ -18,16 +19,23 @@ public class Prospecto extends Login {
     String TCS_Municipio__c = propertyReader.getProperty("prospecto.TCS_Municipio__c");
 
     public void Prospecto() {
+        Random r = new Random();
+        int valorDado = r.nextInt(10)+2;
+
+        String name = firstName+valorDado;
+        String companny = Company+valorDado;
+        String correo = Email+valorDado;
+        String apellido = lastName+valorDado;
 
         clic(By.cssSelector("div[title='Nuevo']"));
         ClickElementFromList(By.xpath("//span[@class='slds-radio--faux']"),1);
         clic(By.xpath("//span[text()='Siguiente']"));
 
-        IngresoDatos(By.xpath("//input[@name='firstName']"),firstName);
-        IngresoDatos(By.xpath("//input[@name='lastName']"),lastName);
-        IngresoDatos(By.xpath("//input[@name='Email']"),Email);
+        IngresoDatos(By.xpath("//input[@name='firstName']"),name);
+        IngresoDatos(By.xpath("//input[@name='lastName']"),apellido);
+        IngresoDatos(By.xpath("//input[@name='Email']"),correo);
         IngresoDatos(By.xpath("//input[@name='Phone']"),Phone);
-        IngresoDatos(By.xpath("//input[@name='Company']"),Company);
+        IngresoDatos(By.xpath("//input[@name='Company']"),companny);
         IngresoDatos(By.xpath("//input[@name='TCS_Calle__c']"),TCS_Calle__c);
         IngresoDatos(By.xpath("//input[@name='TCS_NumExterior__c']"),TCS_NumExterior__c);
         IngresoDatos(By.xpath("//input[@name='TCS_CodigoPostal__c']"),TCS_CodigoPostal__c);
