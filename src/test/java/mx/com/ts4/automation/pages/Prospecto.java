@@ -44,6 +44,7 @@ public class Prospecto extends Login {
         IngresoDatos(By.xpath("//input[@name='TCS_Pais__c']"),TCS_Pais__c);
         IngresoDatos(By.xpath("//input[@name='TCS_Municipio__c']"),TCS_Municipio__c);
 
+        DropDown(By.xpath("//button[contains(@aria-label,'Estado de prospecto -')]"),By.xpath("//span[@title='En proceso']"));
         DropDown(By.xpath("//button[contains(@aria-label,'Tipo de cliente -')]"),By.xpath("//span[@title='Directo']"));
         DropDown(By.xpath("//button[contains(@aria-label,'Sector -')]"),By.xpath("//span[@title='Gobierno Federal']"));
         DropDownList(By.xpath("//button[contains(@aria-label,'Vertical -')]"),By.xpath("//span[@title='Financiero']"),1);

@@ -22,8 +22,7 @@ public class Login extends PageObject {
     //id es el id del elemento
     //text es el texto que se va a mandar al campo de texto
 
-    public void CompletarLogin() {
-
+    public void CompletarLogin() throws InterruptedException {
         IngresoDatos(By.id("username"),customerEmail);
         IngresoDatos(By.id("password"),customerPassword);
         clic(By.id("Login"));

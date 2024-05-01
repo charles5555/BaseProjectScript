@@ -9,21 +9,14 @@ public class Account extends Prospecto{
     public void marcar() throws InterruptedException {
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         Thread.sleep(10000);
-
-        WebElement btn = driver.findElement(By.xpath("//span[text()='Marcar Estado como completado(a)']"));
-        jse.executeScript("arguments[0].click()", btn);
-
-        Thread.sleep(10000);
-
-        WebElement btn2 = driver.findElement(By.xpath("//span[text()='Marcar Estado como completado(a)']"));
-        jse.executeScript("arguments[0].click()", btn2);
+        forceClic(By.xpath("//span[text()='Marcar Estado como completado(a)']"));
 
         Thread.sleep(5000);
 
         clic(By.xpath("//button[text()='Convertir']"));
 
-        Thread.sleep(5000);
-        clic(By.xpath("//a[text()='Compañía de Alejandro-']"));
+        //Thread.sleep(5000);
+        //clic(By.xpath("//a[text()='Compañía de Alejandro-']"));
 
     }
 
